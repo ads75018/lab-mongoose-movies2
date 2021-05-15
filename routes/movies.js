@@ -45,8 +45,17 @@ router.get("/movies/:id/edit", (req, res, next) => {
     .then(function (celebrities) {
       Movie.findById(req.params.id)
         .then((movie) => {
-            console.log(movie, celebrities)
-          res.render("movies/edit", { movie: movie, celebrities });
+          // console.log(movie, celebrities);
+          const celebritieswithCheck = celebrities.map((el) => {
+            if (movie.cast.includes(el._id)) {
+              el.check = true;
+            } else {
+              el.check = false;
+            }
+            return el;
+          });
+          console.log(celebritieswithCheck, celebrities)
+          res.render("movies/edit", { movie: movie, celebrities: celebritieswithCheck });
         })
         .catch((err) => next(err));
     })
@@ -57,6 +66,11 @@ router.get("/movies/:id", (req, res, next) => {
   Movie.findById(req.params.id)
     .populate("cast")
     .then((movie) => res.render("movies/show", { movie: movie }))
+    .catch((err) => next(err));
+});
+router.post("/movies/:id", (req, res, next) => {
+  Movie.findOneAndUpdate({_id: req.params.id}, {$set: {...req.body}})
+    .then((movie) => res.redirect("/movies"))
     .catch((err) => next(err));
 });
 

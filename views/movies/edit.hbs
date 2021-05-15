@@ -1,6 +1,6 @@
 <h2>Editing the movie</h2>
 
-<form action="/movies" method="POST">
+<form action="/movies/{{movie.id}}" method="POST">
   <p>
     <label>
       Title:
@@ -28,7 +28,7 @@
       {{!-- <input type="text" name="cast"> --}}
       <select name="cast" multiple>
           {{#each celebrities}}
-          <option value="{{this.id}}" {{celebrity.name}}> {{this.name}} </option>
+          <option value="{{this.id}}" {{#if this.check}} selected {{/if}}> {{this.name}} </option>
           {{/each}}
       </select>
     </label>
